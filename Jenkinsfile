@@ -7,6 +7,12 @@ pipeline {
                 branch: 'main'
             }
         }
+        stage ('Maven Build API Gateway') {
+            steps {
+                sh 'cd api-gateway'
+                sh 'mvn clean install'
+            }
+        }
 //         stage ('Maven Build') {
 //             steps {
 //                 sh 'mvn clean install -DskipTests'
