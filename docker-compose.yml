@@ -1,0 +1,93 @@
+services:
+    ## MySQL Docker Compose Config
+    db-order:
+        container_name: mysql-order
+        image: mysql
+        healthcheck:
+            test: [ "CMD", "ls" ]
+        environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: microservices
+            MYSQL_USER: app_user
+            MYSQL_PASSWORD: app_password
+        volumes:
+            - ./database-order:/var/lib/mysql
+        networks:
+            - microservicesnetwork
+        restart: unless-stopped
+
+    db-inventory:
+        container_name: mysql-inventory
+        image: mysql
+        healthcheck:
+            test: [ "CMD", "ls" ]
+        environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: microservices
+            MYSQL_USER: app_user
+            MYSQL_PASSWORD: app_password
+        volumes:
+            - ./database-inventory:/var/lib/mysql
+        networks:
+            - microservicesnetwork
+        restart: unless-stopped
+
+    ## Mongo Docker Compose Config
+    mongo:
+        container_name: mongo
+        image: mongo
+        restart: unless-stopped
+        networks:
+            - microservicesnetwork
+        volumes:
+            - ./mongo-data:/data/db
+
+    ## Eureka Server
+    discovery-server:
+        image: budcoded/discoveryserver:latest
+        container_name: discovery-server
+        networks:
+            - microservicesnetwork
+
+    api-gateway:
+        image: budcoded/apigateway:latest
+        container_name: api-gateway
+        networks:
+            - microservicesnetwork
+        depends_on:
+            - discovery-server
+
+    ## Product-Service Docker Compose Config
+    product-service:
+        container_name: product-service
+        image: budcoded/productservice:latest
+        depends_on:
+            - mongo
+            - discovery-server
+            - api-gateway
+        networks:
+            - microservicesnetwork
+
+    ## Order-Service Docker Compose Config
+    order-service:
+        container_name: order-service
+        image: budcoded/orderservice:latest
+        depends_on:
+            - db-order
+            - discovery-server
+            - api-gateway
+        networks:
+            - microservicesnetwork
+
+    ## Inventory-Service Docker Compose Config
+    inventory-service:
+        container_name: inventory-service
+        image: budcoded/inventoryservice:latest
+        depends_on:
+            - db-inventory
+            - discovery-server
+            - api-gateway
+        networks:
+            - microservicesnetwork
+networks:
+    microservicesnetwork:

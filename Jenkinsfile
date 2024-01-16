@@ -42,6 +42,7 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+
         stage ('Build docker image') {
             steps {
                 sh 'docker build -t budcoded/apigateway:latest ./api-gateway/'
@@ -51,6 +52,7 @@ pipeline {
                 sh 'docker build -t budcoded/inventoryservice:latest ./inventory-service/'
             }
         }
+
         stage ('Push docker images') {
             steps {
                 sh 'docker login -u budcoded -p budcodedbudcoded'
@@ -61,33 +63,5 @@ pipeline {
                 sh 'docker push budcoded/inventoryservice:latest'
             }
         }
-//         stage ('Maven Build') {
-//             steps {
-//                 sh 'mvn clean install -DskipTests'
-//             }
-//         }
-//         stage ('Build Docker Image') {
-//             steps {
-// //                 sh 'docker build -t kshitijashah/productmanagementsystem:latest .'
-// //                 sh 'docker build -t kshitijashah/productmanagementsystemui:latest ./frontend'
-//                 sh 'docker build -t budcoded/productmanagementsystem:latest .'
-//                 sh 'docker build -t budcoded/productmanagementsystemui:latest ./frontend'
-//             }
-//         }
-//         stage ('Push Docker Image') {
-//             steps {
-// //                 sh 'docker login -u kshitijashah -p kshitija@9991'
-// //                 sh 'docker push kshitijashah/productmanagementsystem:latest'
-// //                 sh 'docker push kshitijashah/productmanagementsystemui:latest'
-//                 sh 'docker login -u budcoded -p budcodedbudcoded'
-//                 sh 'docker push budcoded/productmanagementsystem:latest'
-//                 sh 'docker push budcoded/productmanagementsystemui:latest'
-//             }
-//         }
-//         stage ('Ansible Copy Docker-Compose File') {
-//             steps {
-//                 sh 'ansible-playbook -i inventory playbook.yml'
-//             }
-//         }
     }
 }

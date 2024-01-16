@@ -1,6 +1,7 @@
 package com.budcoded.orderservice.Controller;
 
 import com.budcoded.orderservice.DTO.OrderRequest;
+import com.budcoded.orderservice.Model.Order;
 import com.budcoded.orderservice.Service.OrderService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -37,5 +39,10 @@ public class OrderController {
 
     public CompletableFuture<String> fallbackMethod (OrderRequest orderRequest, RuntimeException runtimeException) {
         return CompletableFuture.supplyAsync(() -> "Something went wrong, please order after some time.");
+    }
+
+    @GetMapping
+    public List<Order> getAllOrders() {
+        return orderService.getAllOrders();
     }
 }

@@ -1,0 +1,5 @@
+first API server's port is -> 9000
+And Eureka server port -> 8761
+inventory service port is -> 0 (means that any open port will be assigned) (and more than one instances can be created)
+order service port is -> 9001
+product service port is -> 9003
